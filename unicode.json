@@ -1,0 +1,158 @@
+[
+    {
+      "unicode": "$",
+      "main": "usd",
+      "other": ["cad", "aud", "nzd", "sgd", "hkd"]
+    },
+    {
+      "unicode": "₸",
+      "main": "kzt",
+      "other": []
+    },
+    {
+      "unicode": "€",
+      "main": "eur",
+      "other": ["xof", "xpf"]
+    },
+    {
+      "unicode": "£",
+      "main": "gbp",
+      "other": ["egp", "fkp", "gip", "sdp"]
+    },
+    {
+      "unicode": "¥",
+      "main": "cny",
+      "other": ["jpy"]
+    },
+    {
+      "unicode": "₹",
+      "main": "inr",
+      "other": []
+    },
+    {
+      "unicode": "₩",
+      "main": "krw",
+      "other": []
+    },
+    {
+      "unicode": "₽",
+      "main": "rub",
+      "other": []
+    },
+    {
+      "unicode": "₫",
+      "main": "vnd",
+      "other": []
+    },
+    {
+      "unicode": "₪",
+      "main": "ils",
+      "other": []
+    },  
+    {
+      "unicode": "₠",
+      "main": "ewe",
+      "other": []
+    },
+    {
+      "unicode": "₡",
+      "main": "crc",
+      "other": []
+    },
+    {
+      "unicode": "₢",
+      "main": "brc",
+      "other": []
+    },
+    {
+      "unicode": "₣",
+      "main": "frf",
+      "other": []
+    },
+    {
+      "unicode": "₤",
+      "main": "itl",
+      "other": ["ltt"]
+    },
+    {
+      "unicode": "₥",
+      "main": "mlf",
+      "other": []
+    },
+    {
+      "unicode": "₦",
+      "main": "ngn",
+      "other": []
+    },
+    {
+      "unicode": "₨",
+      "main": "pkr",
+      "other": ["lkr", "mvr", "npr"]
+    },
+    {
+      "unicode": "₭",
+      "main": "lak",
+      "other": []
+    },
+    {
+      "unicode": "₮",
+      "main": "mnt",
+      "other": []
+    },
+    {
+      "unicode": "₯",
+      "main": "grd",
+      "other": []
+    },
+    {
+      "unicode": "₱",
+      "main": "php",
+      "other": []
+    },
+    {
+      "unicode": "₲",
+      "main": "pyg",
+      "other": []
+    },
+    {
+        "unicode": "₳",
+        "main": "ara",
+        "other": []
+    },
+    {
+      "unicode": "₴",
+      "main": "uah",
+      "other": []
+    },
+    {
+      "unicode": "₵",
+      "main": "ghs",
+      "other": []
+    },
+    {
+      "unicode": "₺",
+      "main": "try",
+      "other": []
+    },
+    {
+      "unicode": "₼",
+      "main": "azn",
+      "other": []
+    },
+    {
+      "unicode": "₾",
+      "main": "gel",
+      "other": []
+    },
+    {
+      "unicode": "₿",
+      "main": "btc",
+      "other": []
+    },
+    {
+      "unicode": "⃀",
+      "main": "kgs",
+      "other": []
+    }
+  ]
+  

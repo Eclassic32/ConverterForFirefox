@@ -1,0 +1,46 @@
+{
+    "manifest_version": 2,
+    "name": "Converter Extension",
+    "version": "0.7",
+    "description": "Converts currencies of other countries to yours just by selecting it with the mouse.",
+    "permissions": [
+        "activeTab",
+        "https://cdn.jsdelivr.net/",
+        "storage"
+    ],
+    "content_scripts": [
+        {
+            "matches": ["<all_urls>"],
+            "js": ["content.js"],
+            "css": ["content.css"]
+        }
+    ],
+    "options_ui": {
+        "page": "options.html",
+        "open_in_tab": true
+    },
+    "browser_action": {
+        "default_icon": {
+            "32": "icons/icon32.png",
+            "64": "icons/icon64.png",
+            "128": "icons/icon128.png",
+            "256": "icons/icon256.png"
+        },
+        "default_title": "Open Options",
+        "default_popup": "options.html"
+    },
+    "icons": {
+        "32": "icons/icon32.png",
+        "64": "icons/icon64.png",
+        "128": "icons/icon128.png",
+        "256": "icons/icon256.png"
+    },
+    "background": {
+        "scripts": ["background.js"]
+    },
+    "applications": {
+        "gecko": {
+            "id": "converter-extension@ec32.xyz"
+        }
+    }
+}

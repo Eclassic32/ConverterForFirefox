@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Extension Options</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        /* Initially hide the status message */
+        .hidden {
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+        }
+
+        /* Show the status message */
+        .visible {
+            opacity: 1;
+        }
+
+        #status {
+            color: green;
+        }
+
+        #status.error {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <h1>Extension Options</h1>
+    <label>
+        Default Conversion Currency:
+        <input type="text" id="userCurrency" placeholder="e.g., USD">
+    </label>
+    <button id="saveButton">Save</button>
+    <span id="status" class="hidden"></span>
+
+    <script src="options.js"></script>
+</body>
+</html>

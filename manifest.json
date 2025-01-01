@@ -1,6 +1,6 @@
 {
     "manifest_version": 2,
-    "name": "Converter Extension",
+    "name": "Converter Extension a",
     "version": "0.7",
     "description": "Converts currencies of other countries to yours just by selecting it with the mouse.",
     "permissions": [
@@ -26,7 +26,7 @@
             "128": "icons/icon128.png",
             "256": "icons/icon256.png"
         },
-        "default_title": "Open Options",
+        "default_title": "Open Converter Extension Options",
         "default_popup": "options.html"
     },
     "icons": {
@@ -34,9 +34,6 @@
         "64": "icons/icon64.png",
         "128": "icons/icon128.png",
         "256": "icons/icon256.png"
-    },
-    "background": {
-        "scripts": ["background.js"]
     },
     "applications": {
         "gecko": {

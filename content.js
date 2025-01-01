@@ -1,10 +1,17 @@
 let convertTo = "kzt";
 let currencyNames;
 
-
-
-
 document.addEventListener('mouseup', async function () {
+    const selectedText = window.getSelection().toString().trim();
+    const textCurrency = isCurrencyInText(selectedText);
+
+    if (textCurrency.currency == null) { return; }
+
+    currencyNames = await getCurrencyData();    
+    if (currencyNames[textCurrency.currency] == undefined) {
+        console.log(`Currency code not found: ${textCurrency.currency}`);
+        return;
+    }
 
     browser.storage.sync.get(['userCurrency']).then((result) => {
         if (result.userCurrency && convertTo != result.userCurrency) {
@@ -14,34 +21,27 @@ document.addEventListener('mouseup', async function () {
         }
     });
 
-    const selectedText = window.getSelection().toString().trim();
-    currencyNames = await getCurrencyData();
-    
-    const textCurrency = isCurrencyInText(selectedText);
-
-    // Condition: Display tooltip if the selected text is longer than 3 characters
-    if (textCurrency.currency != null && currencyNames[textCurrency.currency] != undefined) {
-        // Remove existing tooltip if any
-        let existingTooltip = document.getElementById('currencyconverter-popup');
-        if (existingTooltip) {
-            existingTooltip.remove();
-        }
-
-        let conversion = {  fromCurrency: textCurrency.currency, 
-                            toCurrency: convertTo, 
-                            fullRates: null,
-                            conversionRate: null, 
-                            amountFrom: textCurrency.amount,
-                            amountTo: null};
-
-        // Fetch conversion rate
-        conversion.fullRates = await getCurrencyData(textCurrency.currency);
-        conversion.conversionRate = conversion.fullRates[conversion.fromCurrency][conversion.toCurrency];
-        conversion.amountTo = conversion.amountFrom * conversion.conversionRate;
-
-        console.debug(conversion);
-        createTooltip(`${conversion.amountFrom.toFixed(2)} ${currencyNames[conversion.fromCurrency]} = ${conversion.amountTo.toFixed(2)} ${currencyNames[conversion.toCurrency]}`);
+    // Remove existing tooltip if any
+    let existingTooltip = document.getElementById('currencyconverter-popup');
+    if (existingTooltip) {
+        existingTooltip.remove();
     }
+
+    let conversion = {  fromCurrency: textCurrency.currency, 
+                        toCurrency: convertTo, 
+                        fullRates: null,
+                        conversionRate: null, 
+                        amountFrom: textCurrency.amount,
+                        amountTo: null};
+
+    // Fetch conversion rate
+    conversion.fullRates = await getCurrencyData(textCurrency.currency);
+    conversion.conversionRate = conversion.fullRates[conversion.fromCurrency][conversion.toCurrency];
+    conversion.amountTo = conversion.amountFrom * conversion.conversionRate;
+
+    console.debug(conversion);
+    createTooltip(`${conversion.amountFrom.toFixed(2)} ${currencyNames[conversion.fromCurrency]} = ${conversion.amountTo.toFixed(2)} ${currencyNames[conversion.toCurrency]}`);
+    
 });
 
 document.addEventListener('mousedown', function(){

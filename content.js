@@ -52,8 +52,8 @@ document.addEventListener('mousedown', function(){
     }
 });
 
-async function fetchAndStoreCurrencyData(url, storageKey) {
-    console.log(`Fetching currency data from the server: ${storageKey}`);
+async function fetchAPIdata(url, storageKey) {
+    console.debug(`Fetching API data from the server: ${storageKey}, ${url}`);
     try {
         const response = await fetch(url);
         if (!response.ok) {
@@ -63,9 +63,10 @@ async function fetchAndStoreCurrencyData(url, storageKey) {
         let storageObject = {};
         storageObject[storageKey] = JSON.stringify(data);
         await browser.storage.local.set(storageObject);
+        console.debug(`API data fetched and stored: ${storageKey}`);
         return data;
     } catch (error) {
-        console.error('Error fetching currency data:', error);
+        console.error('Error fetching API data:', error);
         return null;
     }
 }
@@ -73,25 +74,30 @@ async function fetchAndStoreCurrencyData(url, storageKey) {
 async function getCurrencyData(currencyCode = false) {
     const storageKey = (currencyCode) ? `conversion-${currencyCode}` : "conversion-currencyData";
     let savedData = await browser.storage.local.get(storageKey);
+    const currentDate = new Date().toISOString().split('T')[0]; // Format current date as "YYYY-MM-DD"
 
-    // Check if the key exists in the returned object and if it contains actual data
     if (savedData[storageKey]) {
         savedData = JSON.parse(savedData[storageKey]);
-        const savedDate = savedData.date;
-        const currentDate = new Date().toISOString().split('T')[0]; // Format current date as "YYYY-MM-DD"
         
-        if (savedDate === currentDate || !currencyCode) {
+        // --- This code is ment to check if the data is outdated, but API doenst have consistent/updated data??? ---
+        // if (savedData.date === currentDate || !currencyCode) {
+        if (!currencyCode) {
             return savedData;
         }
     }
 
     const url = `https://cdn.jsdelivr.net/npm/@fawazahmed0/currency-api@latest/v1/currencies` + ((currencyCode) ? `/${currencyCode}.json` : `.min.json`);
-    return await fetchAndStoreCurrencyData(url, storageKey);
+    let APIdata = await fetchAPIdata(url, storageKey);
+    if (APIdata == null) {
+        const fallbackURL = `https://${currentDate}.currency-api.pages.dev/v1/currencies` + ((currencyCode) ? `/${currencyCode}.json` : `.min.json`);
+        return await fetchAPIdata(fallbackURL, storageKey);
+    }
+    return APIdata;
 }
 
 function isCurrencyInText(text){
     // Regular expression to match 3-letter currency codes (like USD, EUR)
-    const currencyRegex = /\b[A-Z]{3}\b/;
+    const currencyRegex = /\b[A-Z]{3}\b/i;
     
     // Regular expression to match amounts (supporting commas and decimals)
     const amountRegex = /(\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?|\d+(?:\.\d{1,2})?)/;

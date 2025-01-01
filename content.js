@@ -3,7 +3,7 @@ let currencyNames;
 
 document.addEventListener('mouseup', async function () {
     const selectedText = window.getSelection().toString().trim();
-    const textCurrency = isCurrencyInText(selectedText);
+    const textCurrency = await isCurrencyInText(selectedText);
 
     if (textCurrency.currency == null) { return; }
 
@@ -95,7 +95,7 @@ async function getCurrencyData(currencyCode = false) {
     return APIdata;
 }
 
-function isCurrencyInText(text){
+async function isCurrencyInText(text) {
     // Regular expression to match 3-letter currency codes (like USD, EUR)
     const currencyRegex = /\b[A-Z]{3}\b/i;
     
@@ -104,18 +104,32 @@ function isCurrencyInText(text){
 
     // Extract currency code
     const currencyMatch = text.match(currencyRegex);
-    const currency = currencyMatch ? (currencyMatch[0]).toLowerCase() : null;
+    let currency = currencyMatch ? (currencyMatch[0]).toLowerCase() : null;
 
     // Extract amount
     const amountMatch = text.match(amountRegex);
     const amount = amountMatch ? parseFloat(amountMatch[0].replace(/,/g, '')) : null;
 
-    if (currency == null || amount == null) {
-        return {currency: null, amount: null};
+    // Check if any unicode characters match
+    if (!currency) {
+        
+        // Load unicode.json
+        const response = await fetch(browser.runtime.getURL('unicode.json'));
+        const unicodeData = await response.json();
+        for (const entry of unicodeData) {
+            if (text.includes(entry.unicode)) {
+                currency = entry.main;
+                break;
+            }
+        }
     }
-    console.debug({currency: currency, amount: amount});
 
-    return {currency: currency, amount: amount};
+    if (currency == null || amount == null) {
+        return { currency: null, amount: null };
+    }
+    console.debug({ currency: currency, amount: amount });
+
+    return { currency: currency, amount: amount };
 }
 
 function createTooltip(text = "DebugText") {

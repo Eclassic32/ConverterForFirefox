@@ -4,18 +4,30 @@ const saveButton = document.getElementById('saveButton');
 const statusElement = document.getElementById('status');
 
 // Load saved settings
-browser.storage.sync.get(['userCurrency']).then((result) => {
+browser.storage.local.get(['userCurrency']).then((result) => {
     if (result.userCurrency) {
-        userCurrencyInput.value = result.userCurrency;
+        userCurrencyInput.value = (result.userCurrency).toUpperCase();
     }
 });
 
 // Save settings
-saveButton.addEventListener('click', function () {
-    const userCurrency = userCurrencyInput.value;
-    browser.storage.sync.set({ userCurrency: userCurrency });
-    browser.storage.local.set({ userCurrency: userCurrency });
+saveButton.addEventListener('click', async function () {
+    let savedData = {};
+    
+    // Validate currency code
+    if (userCurrencyInput.value == "") {
+        statusUpdate("visible error", "Currency code cannot be empty");
+        return;
+    }
+    const currencyNames = await browser.storage.local.get("conversion-currencyData");;    
+    if (currencyNames[userCurrencyInput.value] == undefined) {
+        statusUpdate("visible error", `Currency code not found: ${textCurrency.currency}`);
+        return;
+    }
+    savedData.userCurrency = userCurrencyInput.value.toLowerCase();
 
+    // Save settings
+    browser.storage.local.set(savedData);
     statusUpdate();
 });
 

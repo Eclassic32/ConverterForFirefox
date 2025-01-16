@@ -1,9 +1,13 @@
 ## Currency 
-
-- lower case input
-- unicode symbols support
++ fix regex for 1k+
++ dont convert same currency
+  + error message
++ dont accept wrong currency
+  + error message
++ lower case input
++ unicode symbols support
   - user settings for unicode symbols
-- work with no space btwn amount and currency
++ work with no space btwn amount and currency
 
 
 ## Time

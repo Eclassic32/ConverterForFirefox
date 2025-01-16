@@ -1,7 +1,7 @@
 {
     "manifest_version": 2,
-    "name": "Converter Extension a",
-    "version": "0.7",
+    "name": "Converter Extension",
+    "version": "0.8",
     "description": "Converts currencies of other countries to yours just by selecting it with the mouse.",
     "permissions": [
         "activeTab",

@@ -1,4 +1,4 @@
-let convertTo = "kzt";
+let convertTo;
 let currencyNames;
 
 document.addEventListener('mouseup', async function () {
@@ -13,7 +13,7 @@ document.addEventListener('mouseup', async function () {
         return;
     }
 
-    browser.storage.sync.get(['userCurrency']).then((result) => {
+    browser.storage.local.get(['userCurrency']).then((result) => {
         if (result.userCurrency && convertTo != result.userCurrency) {
             convertTo = result.userCurrency;
             console.log(`User currency is set to: ${convertTo}`);
@@ -25,6 +25,10 @@ document.addEventListener('mouseup', async function () {
     let existingTooltip = document.getElementById('currencyconverter-popup');
     if (existingTooltip) {
         existingTooltip.remove();
+    }
+    // Prevent conversion of same currency
+    if (convertTo == textCurrency.currency) {
+        return;
     }
 
     let conversion = {  fromCurrency: textCurrency.currency, 
@@ -96,24 +100,14 @@ async function getCurrencyData(currencyCode = false) {
 }
 
 async function isCurrencyInText(text) {
+    let currency, amount;
     // Regular expression to match 3-letter currency codes (like USD, EUR)
     const currencyRegex = /\b[A-Z]{3}\b/i;
-    
-    // Regular expression to match amounts (supporting commas and decimals)
-    const amountRegex = /(\d{1,3}(?:,\d{3})*(?:\.\d{1,2})?|\d+(?:\.\d{1,2})?)/;
-
-    // Extract currency code
     const currencyMatch = text.match(currencyRegex);
-    let currency = currencyMatch ? (currencyMatch[0]).toLowerCase() : null;
-
-    // Extract amount
-    const amountMatch = text.match(amountRegex);
-    const amount = amountMatch ? parseFloat(amountMatch[0].replace(/,/g, '')) : null;
+    currency = currencyMatch ? (currencyMatch[0]).toLowerCase() : null;
 
     // Check if any unicode characters match
     if (!currency) {
-        
-        // Load unicode.json
         const response = await fetch(browser.runtime.getURL('unicode.json'));
         const unicodeData = await response.json();
         for (const entry of unicodeData) {
@@ -123,13 +117,27 @@ async function isCurrencyInText(text) {
             }
         }
     }
+    
+    // Regular expression to match amounts (supporting commas and decimals)
+    const amountRegex = /\b\d{1,3}(?:[,\s]\d{3})*(?:[.,]\d{1,2})?\b|\b\d+(?:[.,]\d{1,2})?\b/g;
+    const amountMatch = text.match(amountRegex);
+    if (amountMatch && amountMatch.length > 0) {
+        let numberStr = amountMatch[0]; // Get the first match
+        // Replace spaces and commas used as thousand separators
+        numberStr = numberStr.replace(/[,\s]/g, '');
+        // Replace comma as decimal separator with dot for correct float parsing
+        numberStr = numberStr.replace(/,/, '.');
+        // Parse the cleaned number string as a float
+        amount = parseFloat(numberStr);
+    }
 
-    if (currency == null || amount == null) {
-        return { currency: null, amount: null };
+    
+    // Return either currency and amount or null
+    if            ( currency == null || amount == null ){
+        return    { currency:   null,   amount:   null };
     }
     console.debug({ currency: currency, amount: amount });
-
-    return { currency: currency, amount: amount };
+    return        { currency: currency, amount: amount };
 }
 
 function createTooltip(text = "DebugText") {
@@ -146,10 +154,6 @@ function createTooltip(text = "DebugText") {
     tooltip.style.position = 'absolute';
     tooltip.style.top = `${rect.bottom + window.scrollY}px`;
     tooltip.style.left = `${rect.left + window.scrollX}px`;
-    // tooltip.style.backgroundColor = '#ffeb3b';
-    // tooltip.style.border = '1px solid #000';
-    // tooltip.style.padding = '5px';
-    // tooltip.style.zIndex = '1000';
 
     // Append the tooltip to the body
     document.body.appendChild(tooltip);
